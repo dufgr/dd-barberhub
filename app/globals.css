@@ -13,7 +13,7 @@
     --popover: 228 9% 11%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 252 100% 69%;
+    --primary: 34 55% 63%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 228 6% 16%;
@@ -41,6 +41,6 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground antialiased h-screen flex flex-col;
+    @apply bg-background text-foreground antialiased min-h-screen flex flex-col;
   }
 }

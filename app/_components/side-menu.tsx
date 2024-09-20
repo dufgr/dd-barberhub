@@ -4,15 +4,27 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { SheetHeader, SheetTitle } from "./ui/sheet";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
-import { CalendarIcon, HomeIcon, LogInIcon, LogOutIcon, UserIcon } from "lucide-react";
+import {
+  CalendarIcon,
+  DropletsIcon,
+  HomeIcon,
+  LogInIcon,
+  LogOutIcon,
+  ScissorsIcon,
+  SparklesIcon,
+  UserIcon,
+  WavesIcon,
+} from "lucide-react";
 import Link from "next/link";
 
+// Reúne autenticação e atalhos de serviço no menu mobile.
 const SideMenu = () => {
   const { data } = useSession();
 
   const handleLogoutClick = () => signOut();
 
-  const handleLoginClick = () => signIn("google");
+  // Usa credenciais locais no desenvolvimento e Google em produção.
+  const handleLoginClick = () => signIn(process.env.NODE_ENV === "development" ? "local" : "google");
 
   return (
     <>
@@ -30,8 +42,8 @@ const SideMenu = () => {
             <h2 className="font-bold">{data.user.name}</h2>
           </div>
 
-          <Button variant="secondary" size="icon">
-            <LogOutIcon onClick={handleLogoutClick} />
+          <Button variant="secondary" size="icon" onClick={handleLogoutClick} aria-label="Sair da conta">
+            <LogOutIcon />
           </Button>
         </div>
       ) : (
@@ -42,7 +54,7 @@ const SideMenu = () => {
           </div>
           <Button variant="secondary" className="w-full justify-start" onClick={handleLoginClick}>
             <LogInIcon className="mr-2" size={18} />
-            Fazer Login
+            {process.env.NODE_ENV === "development" ? "Entrar localmente" : "Fazer Login com Google"}
           </Button>
         </div>
       )}
@@ -63,6 +75,24 @@ const SideMenu = () => {
             </Link>
           </Button>
         )}
+
+        <div className="my-2 border-t border-border" />
+
+        {[
+          { label: "Cabelo", service: "Cabelo", Icon: ScissorsIcon },
+          { label: "Barba", service: "Barba", Icon: WavesIcon },
+          { label: "Acabamento", service: "Pézinho", Icon: SparklesIcon },
+          { label: "Sobrancelha", service: "Sobrancelha", Icon: UserIcon },
+          { label: "Massagem", service: "Massagem", Icon: WavesIcon },
+          { label: "Hidratação", service: "Hidratação", Icon: DropletsIcon },
+        ].map(({ label, service, Icon }) => (
+          <Button key={label} variant="ghost" className="justify-start" asChild>
+            <Link href={`/barbershops?service=${encodeURIComponent(service)}`}>
+              <Icon size={18} className="mr-2" />
+              {label}
+            </Link>
+          </Button>
+        ))}
       </div>
     </>
   );

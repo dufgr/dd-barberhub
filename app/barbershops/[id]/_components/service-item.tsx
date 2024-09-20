@@ -24,6 +24,7 @@ interface ServiceItemProps {
   isAuthenticated: boolean;
 }
 
+// Controla disponibilidade e reserva de um serviço.
 const ServiceItem = ({ service, barbershop, isAuthenticated }: ServiceItemProps) => {
   const router = useRouter();
 
@@ -36,6 +37,7 @@ const ServiceItem = ({ service, barbershop, isAuthenticated }: ServiceItemProps)
   const [dayBookings, setDayBookings] = useState<Booking[]>([]);
 
   useEffect(() => {
+    // Atualiza os horários disponíveis sempre que o dia selecionado muda.
     if (!date) {
       return;
     }
@@ -59,11 +61,12 @@ const ServiceItem = ({ service, barbershop, isAuthenticated }: ServiceItemProps)
 
   const handleBookingClick = () => {
     if (!isAuthenticated) {
-      return signIn("google");
+      return signIn(process.env.NODE_ENV === "development" ? "local" : "google");
     }
   };
 
   const handleBookingSubmit = async () => {
+    // Combina data e horário escolhidos antes de salvar a reserva.
     setSubmitIsLoading(true);
 
     try {
@@ -128,9 +131,9 @@ const ServiceItem = ({ service, barbershop, isAuthenticated }: ServiceItemProps)
 
   return (
     <Card>
-      <CardContent className="p-3 w-full">
-        <div className="flex gap-4 items-center w-full">
-          <div className="relative min-h-[110px] min-w-[110px] max-h-[110px] max-w-[110px]">
+      <CardContent className="w-full p-3">
+        <div className="flex w-full items-center gap-3">
+          <div className="relative h-[110px] w-[110px] shrink-0 md:h-20 md:w-20 xl:h-[110px] xl:w-[110px]">
             <Image
               className="rounded-lg"
               src={service.imageUrl}
@@ -140,12 +143,12 @@ const ServiceItem = ({ service, barbershop, isAuthenticated }: ServiceItemProps)
             />
           </div>
 
-          <div className="flex flex-col w-full">
-            <h2 className="font-bold">{service.name}</h2>
-            <p className="text-sm text-gray-400">{service.description}</p>
+          <div className="flex min-w-0 flex-1 flex-col">
+            <h2 className="truncate text-sm font-bold md:text-xs xl:text-sm">{service.name}</h2>
+            <p className="line-clamp-2 text-sm text-gray-400 md:text-[10px] xl:text-xs">{service.description}</p>
 
-            <div className="flex items-center justify-between mt-3">
-              <p className="text-primary text-sm font-bold">
+            <div className="mt-3 flex items-center justify-between gap-1">
+              <p className="text-sm font-bold text-primary md:text-xs xl:text-sm">
                 {Intl.NumberFormat("pt-BR", {
                   style: "currency",
                   currency: "BRL",
@@ -153,7 +156,7 @@ const ServiceItem = ({ service, barbershop, isAuthenticated }: ServiceItemProps)
               </p>
               <Sheet open={sheetIsOpen} onOpenChange={setSheetIsOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="secondary" onClick={handleBookingClick}>
+                  <Button variant="secondary" className="md:h-9 md:px-3" onClick={handleBookingClick}>
                     Reservar
                   </Button>
                 </SheetTrigger>

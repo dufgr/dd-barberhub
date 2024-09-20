@@ -35,12 +35,14 @@ interface BookingItemProps {
   }>;
 }
 
+// Mantém detalhes e confirmação de cancelamento no painel da reserva.
 const BookingItem = ({ booking }: BookingItemProps) => {
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   const isBookingConfirmed = isFuture(booking.date);
 
   const handleCancelClick = async () => {
+    // Evita pedidos duplicados enquanto a ação de cancelamento está em andamento.
     setIsDeleteLoading(true);
 
     try {

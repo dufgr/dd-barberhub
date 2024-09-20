@@ -23,6 +23,7 @@ interface SearchProps {
   defaultValues?: z.infer<typeof formSchema>;
 }
 
+// Envia o filtro pela URL para os resultados serem carregados no servidor.
 const Search = ({ defaultValues }: SearchProps) => {
   const router = useRouter();
 
@@ -32,7 +33,9 @@ const Search = ({ defaultValues }: SearchProps) => {
   });
 
   const handleSubmit = (data: z.infer<typeof formSchema>) => {
-    router.push(`/barbershops?search=${data.search}`);
+    // Codifica a busca antes de adicioná-la à query string.
+    const searchParams = new URLSearchParams({ search: data.search });
+    router.push(`/barbershops?${searchParams.toString()}`);
   };
 
   return (
