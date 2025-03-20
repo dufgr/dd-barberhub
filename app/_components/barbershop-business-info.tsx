@@ -110,7 +110,7 @@ const BarbershopBusinessInfo = ({
           </div>
           <div className="flex items-center justify-between border-t border-border pt-3">
             <span className="text-[10px] text-muted-foreground">Em parceria com</span>
-            <Image src="/dd-barberhub.png" alt="DD BarberHub" width={90} height={14} />
+            <Image src="/dd-barberhub.png" alt="DD Barber Hub" width={90} height={14} />
           </div>
           </CardContent>
         </Card>

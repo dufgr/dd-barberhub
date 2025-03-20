@@ -50,7 +50,7 @@ const BarbershopCarousel = ({ title, barbershops }: BarbershopCarouselProps) => 
           {barbershops.map((barbershop) => (
             <div
               key={barbershop.id}
-              className="min-w-[167px] max-w-[167px] snap-start md:min-w-[220px] md:max-w-[220px]"
+              className="min-w-[167px] max-w-[167px] snap-start md:min-w-0 md:max-w-none md:basis-[calc(33.333333%_-_10.666667px)] md:shrink-0 md:grow-0 lg:basis-[calc(20%_-_12.8px)]"
             >
               <BarbershopItem barbershop={barbershop} />
             </div>

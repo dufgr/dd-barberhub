@@ -3,7 +3,9 @@ const Footer = () => {
   return (
     <footer className="mt-auto w-full bg-secondary">
       <div className="mx-auto w-full max-w-[1280px] px-5 py-6">
-        <p className="text-gray-400 text-xs font-bold opacity-75">© 2023 Copyright DD Barber Hub</p>
+        <p className="text-gray-400 text-xs font-bold opacity-75">
+          © {new Date().getFullYear()} Copyright DD Barber Hub
+        </p>
       </div>
     </footer>
   );

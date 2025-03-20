@@ -22,7 +22,7 @@ const Header = ({ desktopOnly = false, showSearch = true }: { desktopOnly?: bool
       <Card className="w-full rounded-none border-x-0 border-t-0">
         <CardContent className="mx-auto flex w-full max-w-[1280px] flex-row items-center justify-between gap-4 p-4 md:px-6">
           <Link href="/" className="shrink-0">
-            <Image src="/dd-barberhub.png" alt="DD BarberHub" height={18} width={120} />
+            <Image src="/dd-barberhub.png" alt="DD Barber Hub" height={18} width={120} />
           </Link>
 
           {showSearch && (

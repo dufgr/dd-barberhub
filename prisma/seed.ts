@@ -94,38 +94,48 @@ async function seedDatabase() {
       },
     ];
 
-    // Criar 10 barbearias com nomes e endereços fictícios
-    const barbershops = [];
-    for (let i = 0; i < 10; i++) {
+    const selectedBarbershopIndexes = [4, 3, 9, 2, 7];
+    const retiredNames = creativeNames.filter((_, index) => !selectedBarbershopIndexes.includes(index));
+
+    // Remove lojas antigas do seed apenas quando não têm reservas associadas.
+    const retiredBarbershops = await prisma.barbershop.findMany({
+      where: { name: { in: retiredNames }, bookings: { none: {} } },
+      select: { id: true },
+    });
+    const retiredIds = retiredBarbershops.map((barbershop: { id: string }) => barbershop.id);
+    if (retiredIds.length > 0) {
+      await prisma.service.deleteMany({ where: { barbershopId: { in: retiredIds } } });
+      await prisma.barbershop.deleteMany({ where: { id: { in: retiredIds } } });
+    }
+
+    // Garante cinco barbearias do seed sem duplicá-las ao executar novamente.
+    for (const i of selectedBarbershopIndexes) {
       const name = creativeNames[i];
       const address = addresses[i];
       const imageUrl = images[i];
 
-      const barbershop = await prisma.barbershop.create({
-        data: {
-          name,
-          address,
-          imageUrl: imageUrl,
-        },
+      const barbershop = await prisma.barbershop.findFirst({
+        where: { name, address },
+      }) ?? await prisma.barbershop.create({
+        data: { name, address, imageUrl },
       });
 
       for (const service of services) {
-        await prisma.service.create({
-          data: {
-            name: service.name,
-            description: service.description,
-            price: service.price,
-            barbershop: {
-              connect: {
-                id: barbershop.id,
-              },
-            },
-            imageUrl: service.imageUrl,
-          },
+        const existingService = await prisma.service.findFirst({
+          where: { name: service.name, barbershopId: barbershop.id },
         });
+        if (!existingService) {
+          await prisma.service.create({
+            data: {
+              name: service.name,
+              description: service.description,
+              price: service.price,
+              barbershopId: barbershop.id,
+              imageUrl: service.imageUrl,
+            },
+          });
+        }
       }
-
-      barbershops.push(barbershop);
     }
 
     // Fechar a conexão com o banco de dados
