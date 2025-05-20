@@ -1,56 +1,56 @@
 # DD Barber Hub
 
-Aplicação full-stack para descobrir barbearias, consultar serviços e horários e gerenciar reservas. O projeto oferece interfaces responsivas para mobile e desktop, autenticação Google em produção e um usuário local de demonstração durante o desenvolvimento.
+Full-stack application for discovering barbershops, browsing services and schedules, and managing bookings. The project offers responsive mobile and desktop interfaces, Google authentication in production, and a local demo user during development.
 
 ## Preview
 
-- [Abrir o design do projeto no Figma](https://www.figma.com/design/ByDjVh7THsTnsSVRKNN8yy/FSW-5.0--Live-?node-id=1-8&p=f)
-- Demo publicada: ainda não disponível.
+- [Open the project design on Figma](https://www.figma.com/design/ByDjVh7THsTnsSVRKNN8yy/FSW-5.0--Live-?node-id=1-8&p=f)
+- Published demo: not available yet.
 
-## Funcionalidades
+## Features
 
-- Busca de barbearias por nome e filtros por serviço.
-- Páginas de detalhes com serviços, preços, localização e informações de contato.
-- Seleção de data e horário com verificação de reservas existentes.
-- Autenticação Google para produção e login local simplificado em desenvolvimento.
-- Listagem e cancelamento de reservas.
-- Layout responsivo para mobile e desktop.
+- Search barbershops by name and filter by service.
+- Detail pages with services, prices, location, and contact information.
+- Date and time selection with availability checked against existing bookings.
+- Google authentication for production and a simplified local login in development.
+- Booking list and cancellation.
+- Responsive layout for mobile and desktop.
 
 ## Stack
 
-| Área | Tecnologias |
+| Area | Technologies |
 | --- | --- |
-| Aplicação | Next.js 14, React 18, TypeScript |
-| Interface | Tailwind CSS, Radix UI, Lucide |
-| Autenticação | NextAuth.js, Google OAuth, Prisma Adapter |
-| Dados | PostgreSQL, Prisma ORM |
+| Application | Next.js 14, React 18, TypeScript |
+| UI | Tailwind CSS, Radix UI, Lucide |
+| Authentication | NextAuth.js, Google OAuth, Prisma Adapter |
+| Data | PostgreSQL, Prisma ORM |
 | Deploy | Vercel |
 
-## Arquitetura e decisões
+## Architecture and decisions
 
-- O App Router separa páginas e componentes compartilhados; leituras de dados são feitas no servidor e interações de interface ficam em componentes client-side.
-- Prisma centraliza o acesso ao PostgreSQL. O cliente é reutilizado em desenvolvimento para evitar abrir conexões a cada hot reload.
-- Reservas são persistidas no banco e os horários disponíveis são calculados a partir das reservas existentes.
-- Sessões JWT permitem compartilhar o fluxo de sessão entre Google OAuth e o provedor de credenciais local. O provedor local só é registrado com `NODE_ENV=development`.
-- `DATABASE_URL` pode apontar para uma conexão agrupada em ambientes serverless; `DIRECT_URL` é usado pelo Prisma para operações como migrations.
-- Telefones e horários mostrados na interface são dados demonstrativos do protótipo e ainda não fazem parte do modelo Prisma.
+- The App Router separates pages and shared components; data reads happen on the server, while UI interactions stay in client components.
+- Prisma centralizes access to PostgreSQL. The client is reused in development to avoid opening new connections on every hot reload.
+- Bookings are persisted in the database, and available times are calculated from existing reservations.
+- JWT sessions allow sharing the session flow between Google OAuth and the local credentials provider. The local provider is only registered when `NODE_ENV=development`.
+- `DATABASE_URL` can point to a pooled connection in serverless environments; `DIRECT_URL` is used by Prisma for operations such as migrations.
+- Phone numbers and opening hours shown in the UI are prototype demo data and are not yet part of the Prisma model.
 
-## Executar localmente
+## Running locally
 
-### Pré-requisitos
+### Prerequisites
 
-- Node.js 20 LTS (ou Node.js 18.17 ou superior).
+- Node.js 20 LTS (or Node.js 18.17 or later).
 - npm.
-- Docker Desktop para iniciar o PostgreSQL local.
+- Docker Desktop to start PostgreSQL locally.
 
-### Instalação
+### Installation
 
 ```bash
-git clone https://github.com/<seu-usuario>/fullstackweek-barber.git
+git clone https://github.com/<your-username>/fullstackweek-barber.git
 cd fullstackweek-barber
 ```
 
-Copie `.env.example` para `.env` e ajuste os valores quando necessário. O arquivo `.env` é ignorado pelo Git e é lido tanto pelo Next.js quanto pelos comandos do Prisma.
+Copy `.env.example` to `.env` and adjust the values as needed. The `.env` file is ignored by Git and is read by both Next.js and Prisma commands.
 
 PowerShell:
 
@@ -64,19 +64,19 @@ macOS/Linux:
 cp .env.example .env
 ```
 
-Gere um segredo local com Node.js e substitua `NEXTAUTH_SECRET` no `.env`:
+Generate a local secret with Node.js and replace `NEXTAUTH_SECRET` in `.env`:
 
 ```bash
 node -e "console.log(require('node:crypto').randomBytes(32).toString('base64'))"
 ```
 
-Depois de preencher o segredo, instale as dependências:
+After filling in the secret, install the dependencies:
 
 ```bash
 npm ci
 ```
 
-Suba o banco, aplique as migrations e carregue os dados de demonstração:
+Start the database, apply migrations, and load demo data:
 
 ```bash
 docker compose up -d postgres
@@ -85,15 +85,15 @@ npm run db:seed
 npm run dev
 ```
 
-Acesse [http://localhost:3000](http://localhost:3000). O seed cria dados de demonstração e deve ser executado uma vez em um banco vazio.
+Open [http://localhost:3000](http://localhost:3000). The seed creates demo data and should be run once against an empty database.
 
-### Login local
+### Local login
 
-Em `npm run dev`, o menu oferece **Entrar localmente**. Esse provedor cria ou reutiliza o usuário `local@localhost`, sem exigir credenciais Google. Ele só é incluído quando a aplicação roda em desenvolvimento; não é um método de autenticação para produção.
+When running `npm run dev`, the menu offers **Local sign in**. This provider creates or reuses the user `local@localhost` without requiring Google credentials. It is only included when the app runs in development; it is not an authentication method for production.
 
-Para testar Google OAuth localmente, configure `GOOGLE_CLIENT_ID` e `GOOGLE_CLIENT_SECRET` no `.env` e cadastre `http://localhost:3000/api/auth/callback/google` como URI de redirecionamento autorizado no Google Cloud Console.
+To test Google OAuth locally, set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `.env` and register `http://localhost:3000/api/auth/callback/google` as an authorized redirect URI in the Google Cloud Console.
 
-## Validação
+## Validation
 
 ```bash
 npm run lint
@@ -101,14 +101,14 @@ npx tsc --noEmit
 npm run build
 ```
 
-O repositório ainda não possui uma suíte automatizada de testes de interface.
+The repository does not yet have an automated UI test suite.
 
-## Deploy na Vercel
+## Deploy on Vercel
 
-1. Importe o repositório no projeto da Vercel e configure um PostgreSQL gerenciado acessível pelo deploy.
-2. Cadastre as variáveis `DATABASE_URL`, `DIRECT_URL`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `GOOGLE_CLIENT_ID` e `GOOGLE_CLIENT_SECRET` nos ambientes correspondentes da Vercel.
-3. Use a URL agrupada/pooler em `DATABASE_URL` quando o provedor oferecer uma para funções serverless. Configure a URL direta em `DIRECT_URL` para executar migrations.
-4. Antes de disponibilizar uma versão com novas migrations, execute `npm run db:migrate:deploy` contra o banco de produção.
-5. No Google Cloud Console, autorize `https://<seu-dominio>/api/auth/callback/google` como URI de redirecionamento OAuth.
+1. Import the repository into your Vercel project and configure a managed PostgreSQL instance accessible by the deployment.
+2. Register the variables `DATABASE_URL`, `DIRECT_URL`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `GOOGLE_CLIENT_ID`, and `GOOGLE_CLIENT_SECRET` in the corresponding Vercel environments.
+3. Use the pooled/pooler URL in `DATABASE_URL` when the provider offers one for serverless functions. Set the direct URL in `DIRECT_URL` to run migrations.
+4. Before releasing a version with new migrations, run `npm run db:migrate:deploy` against the production database.
+5. In the Google Cloud Console, authorize `https://<your-domain>/api/auth/callback/google` as an OAuth redirect URI.
 
-A Vercel detecta Next.js automaticamente. O comando de build do projeto executa `prisma generate` antes de `next build`. A autenticação local é desativada em produção; as credenciais Google e a configuração do banco são necessárias para o deploy funcional.
+Vercel detects Next.js automatically. The project's build command runs `prisma generate` before `next build`. Local authentication is disabled in production; Google credentials and database configuration are required for a functional deployment.
